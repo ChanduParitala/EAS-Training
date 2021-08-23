@@ -22,18 +22,20 @@ class Person{
 	//Room number is system generated.
 	LocalDate startDay, endDay;
 	List<String> bookings = new ArrayList<String>();
+	Room rObj;
 	public Person() {};
 	public Person(String name, String location, String mailId) {
 		super();
 		this.name = name;
 		this.location = location;
+		this.mailId=mailId;
 	}
 }
 
 class Room{
 	final String hotelName = "Sars Hotel";
 	int roomNo, noOfPeople;
-	double pay, bill=0;
+	double pay, bill;
 	static ArrayList<Person> pList = new ArrayList<>();
 	Person pObj = new Person();
 	public Room(int roomNo, double pay, Person pObj, int noOfPeople, int days) {
@@ -50,13 +52,15 @@ class Room{
 				pObj.endDay = LocalDate.now().plusDays(days);
 				pObj.bookings.add("\n"+this.hotelName+", Room No.,"+this.roomNo+" on, "+LocalDate.now());
 				p = pObj;
+				Period duration = Period.between(pObj.startDay,pObj.endDay);
+				long diff= duration.getDays();
+				bill = diff*pay;
+				System.out.println("Bill: "+bill);
+				p.rObj = this;
 			}
 		}
 	}
-	public Room(Person pObj)
-	{
-		this.pObj=pObj;
-	}
+	
 }
 
 class GuestRoom extends Room{
@@ -84,11 +88,7 @@ class GuestRoom extends Room{
 			}
 		}
 	}
-
-	public GuestRoom(Person pObj)
-	{
-		super(pObj);
-	}
+	
 }
 
 class PartyHall extends GuestRoom{
@@ -111,10 +111,6 @@ class PartyHall extends GuestRoom{
 		}
 	}
 	
-	public PartyHall(Person pObj)
-	{
-		super(pObj);
-	}
 }
 
 class ConferenceHall extends GuestRoom{
@@ -137,10 +133,6 @@ class ConferenceHall extends GuestRoom{
 		}
 	}
 	
-	public ConferenceHall(Person pObj)
-	{
-		super(pObj);
-	}
 }
 
 class RaceGardensException extends Exception{
@@ -241,7 +233,7 @@ public class RaceGardens {
 			System.out.println("Register to proceed");
 			return;
 		}
-		Room rObj = new Room(pObj);
+		Room rObj = pObj.rObj;
 		LocalDate day=LocalDate.now();
 		if(pObj.startDay == null)
 		{
@@ -249,7 +241,7 @@ public class RaceGardens {
 			return;
 		}
 		System.out.println("Hey Mr."+name+" Here are the details of customers: ");
-		Period maxDuration = Period.between(pObj.endDay, pObj.startDay);
+		Period maxDuration = Period.between(pObj.startDay,pObj.endDay);
 		long maxDiff= maxDuration.getDays();
 		for(Person i : rObj.pList)
 		{
@@ -278,7 +270,7 @@ public class RaceGardens {
 			System.out.println("Register to proceed");
 			return;
 		}
-		Room rObj = new Room(pObj);
+		Room rObj = pObj.rObj;
 		LocalDate day=LocalDate.now();
 		if(pObj.startDay == null)
 		{
@@ -355,20 +347,19 @@ public class RaceGardens {
 			System.out.println("Register to proceed");
 			return;
 		}
-		Room rObj = new Room(pObj);
+		Room rObj = pObj.rObj;
 		LocalDate day=LocalDate.now();
 		if(pObj.startDay == null)
 		{
 			System.out.println("Book a room to proceed");
 			return;
 		}
-		Period duration = Period.between(day, pObj.startDay);
+		Period duration = Period.between(pObj.startDay,LocalDate.now());
 		long diff= duration.getDays();
-		rObj.bill = diff*rObj.pay;
-		System.out.println("Hey, Mr."+name+" You have been Allocated the room, "+rObj.roomNo+" till "+LocalDate.now()+" Your bill is: "+rObj.bill);
-		Period maxDuration = Period.between(pObj.endDay, pObj.startDay);
-		long maxDiff= maxDuration.getDays();
-		System.out.println("Your check out date is: "+pObj.endDay+" with maximum bill "+ maxDiff*rObj.pay);
+		double bill = diff*rObj.pay;
+		System.out.println("Hey, Mr."+pObj.name+" You have been Allocated the room, "+rObj.roomNo+" Your current bill is: "+bill);
+		
+		System.out.println("Your check out date is: "+pObj.endDay+" with maximum bill "+ rObj.bill);
 		return;
 	}
 
@@ -421,7 +412,7 @@ public class RaceGardens {
 			{
 				pay=12500.0d;
 				GuestRoom gObj = new PartyHall(roomNo, pay, pObj, 200, 1, LocalDate.now(), LocalDate.now().plusDays(1));
-				System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Ocassional Celebration with max. 200 "+gObj.noOfPeople+" members.");
+				System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Ocassional Celebration with max. "+gObj.noOfPeople+" members.");
 				System.out.println("Your reservation ends on, "+gObj.checkOut);
 				return;
 			}
@@ -429,7 +420,7 @@ public class RaceGardens {
 		{
 			pay=15000.0d;
 			GuestRoom gObj = new ConferenceHall(roomNo, pay, pObj, 20, 1, LocalDate.now(), LocalDate.now().plusDays(1));
-			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Conference with max. 20  "+gObj.noOfPeople+" members.");
+			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Conference with max. "+gObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+gObj.checkOut);
 			return;
 		}		
@@ -478,10 +469,14 @@ public class RaceGardens {
 
 	private static void register() {
 		String name, location, mailId;
+		Person pObj;
 		boolean flag = false;
 		System.out.println("Enter your name: ");
 		name=in.next();
+		System.out.println("Enter your location: ");
+		location=in.next();
 		System.out.println("Enter your email: ");
+		
 		do {
 			mailId=in.next();
 			try {
@@ -489,10 +484,10 @@ public class RaceGardens {
 				Pattern pattern = Pattern.compile(regexp);
 				Matcher match = pattern.matcher(mailId);
 				if(!match.matches()) throw new RaceGardensException("Enter a Valid e-Mail Id please!!, try again");
-				else 
+				else
 				{
 					flag=false;
-					System.out.println("Good\n");
+					System.out.println("Good!\n");;
 				}
 			}
 			catch(RaceGardensException e){
@@ -503,11 +498,9 @@ public class RaceGardens {
 				e.printStackTrace();
 				flag=true;
 			}
+			
 		}while(flag);
-		System.out.println("Enter your location: ");
-		location=in.next();
-		
-		Person pObj = new Person(name, location, mailId);
+		pObj = new Person(name, location, mailId);
 		Room.pList.add(pObj);
 		GuestRoom.gpList.add(pObj);
 		System.out.println("Registered! ");
