@@ -6,11 +6,28 @@ package EAS.java.handson;
  * Thanks for visiting!
  */
 
+/*
+Before going ahead. pls include the following in mysql workbench!, and add jar to buildpath.
+database : jdbc
+username: root
+password: 2luvuu
+
+Table : roomBook
+create table roomBook(p_name varchar(30), p_email varchar(20), p_location varchar(100), p_room_no integer, p_bill float(10,2));
+alter table roombook add check_in date,add check_out date;
+*/
+
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.List;
 import java.util.Random;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
@@ -18,9 +35,10 @@ import java.util.ArrayList;
 
 class Person{
 	String name, location, mailId;
+	LocalDate startDay;
 	//no specific schedule for allowance of precise dates, so, customers can book on anyday.
 	//Room number is system generated.
-	LocalDate startDay, endDay;
+	LocalDate endDay;
 	List<String> bookings = new ArrayList<String>();
 	Room rObj;
 	public Person() {};
@@ -76,7 +94,8 @@ class GuestRoom extends Room{
 		this.checkIn=checkIn;
 		this.checkOut=checkOut;
 		
-		for(Person p : gpList)
+		//data is inserted once thru parent class.
+		/*for(Person p : gpList)
 		{
 			if(p.name.equalsIgnoreCase(pObj.name))
 			{
@@ -86,7 +105,7 @@ class GuestRoom extends Room{
 				pObj.bookings.add("\n"+this.hotelName+", Room No.,"+this.roomNo+" on, "+LocalDate.now());
 				p = pObj;
 			}
-		}
+		}*/
 	}
 	
 }
@@ -98,7 +117,8 @@ class PartyHall extends GuestRoom{
 	public PartyHall(int roomNo, double pay, Person pObj, int noOfPeople, int days, LocalDate checkIn, LocalDate checkOut) {
 		super(roomNo, pay, pObj, noOfPeople, days, checkIn, checkIn);
 		
-		for(Person p : GuestRoom.gpList)
+		//data is inserted once thru parent class.
+		/*for(Person p : gpList)
 		{
 			if(p.name.equalsIgnoreCase(pObj.name))
 			{
@@ -108,7 +128,7 @@ class PartyHall extends GuestRoom{
 				pObj.bookings.add("\n"+this.hotelName+", Room No.,"+this.roomNo+" on, "+LocalDate.now());
 				p = pObj;
 			}
-		}
+		}*/
 	}
 	
 }
@@ -120,7 +140,8 @@ class ConferenceHall extends GuestRoom{
 	public ConferenceHall(int roomNo, double pay, Person pObj, int noOfPeople, int days, LocalDate checkIn, LocalDate checkOut) {
 		super(roomNo, pay, pObj, noOfPeople, days, checkIn, checkIn);
 		
-		for(Person p : GuestRoom.gpList)
+		//data is inserted once thru parent class.
+		/*for(Person p : gpList)
 		{
 			if(p.name.equalsIgnoreCase(pObj.name))
 			{
@@ -130,7 +151,7 @@ class ConferenceHall extends GuestRoom{
 				pObj.bookings.add("\n"+this.hotelName+", Room No.,"+this.roomNo+" on, "+LocalDate.now());
 				p = pObj;
 			}
-		}
+		}*/
 	}
 	
 }
@@ -363,6 +384,7 @@ public class RaceGardens {
 		return;
 	}
 
+	@SuppressWarnings("finally")
 	private static void bookRoom() {
 		int roomNo;
 		Random rand = new Random();
@@ -414,7 +436,6 @@ public class RaceGardens {
 				GuestRoom gObj = new PartyHall(roomNo, pay, pObj, 200, 1, LocalDate.now(), LocalDate.now().plusDays(1));
 				System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Ocassional Celebration with max. "+gObj.noOfPeople+" members.");
 				System.out.println("Your reservation ends on, "+gObj.checkOut);
-				return;
 			}
 		else
 		{
@@ -422,7 +443,6 @@ public class RaceGardens {
 			GuestRoom gObj = new ConferenceHall(roomNo, pay, pObj, 20, 1, LocalDate.now(), LocalDate.now().plusDays(1));
 			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Conference with max. "+gObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+gObj.checkOut);
-			return;
 		}		
 		System.out.println("Enter Number of people residing: ");
 		int noOfPeople;
@@ -454,16 +474,39 @@ public class RaceGardens {
 			Room roomObj =  new Room(roomNo, pay,pObj,noOfPeople,days);
 			System.out.println("Mr."+name+" "+"Room booked, "+roomObj.roomNo+" in "+roomObj.hotelName+" on, "+pObj.startDay+" residing "+roomObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+pObj.endDay);
-			return;
 		}
 		else
 		{
 			GuestRoom gObj = new GuestRoom(roomNo, pay, pObj, noOfPeople, days, LocalDate.now(), LocalDate.now().plusDays(days));
 			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" residing "+gObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+gObj.checkOut);
-			return;
 		}
 		
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc","root","2luvuu");
+			String stmt = "insert into roombook values(?,?,?,?,?,?,?)";
+			PreparedStatement ps = con.prepareStatement(stmt);
+			ps.setString(1, pObj.name);
+			ps.setString(2, pObj.mailId);
+			ps.setString(3, pObj.location);
+			ps.setDouble(4, pObj.rObj.roomNo);
+			ps.setDouble(5, pObj.rObj.bill);
+			ps.setDate(6, java.sql.Date.valueOf(pObj.startDay));
+			ps.setDate(7, java.sql.Date.valueOf(pObj.endDay));
+			
+			
+			int rs = ps.executeUpdate();
+			if(rs==1)
+				System.out.println("Insertion done!");
+			
+			con.close();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			return;
+		}
 	}
 		
 
