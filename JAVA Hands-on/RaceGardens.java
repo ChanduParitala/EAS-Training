@@ -443,8 +443,7 @@ public class RaceGardens {
 			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Conference with max. "+gObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+gObj.checkOut);
 		}	
-		if(choice.equals("H"))
-		{
+		
 		System.out.println("Enter Number of people residing: ");
 		int noOfPeople;
 		do {
@@ -467,12 +466,10 @@ public class RaceGardens {
 				flag=true;
 			}
 		}while(flag);
-		}
-		if(choice.equals("H"))
-		{
+		
 		System.out.println("Enter days to reside: ");
 		int days = in.nextInt();
-		}
+		
 		
 		if(choice.equals("H"))
 		{
