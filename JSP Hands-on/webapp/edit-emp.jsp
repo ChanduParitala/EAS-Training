@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<form action="EmpDetailsServlet" method="post">
+	<form action="DisplayDetailsServlet" method="post">
 		<table>
 			<tr>
 				<td>ID:</td>
@@ -33,6 +33,7 @@
 					
 				<tr>
 				<td>Department:</td>
+				<!-- how to do c:forEach??? -->
 				<td><select name="department">
 				<option value="IT">IT</option>
 				<option value="ECE">ECE</option>
