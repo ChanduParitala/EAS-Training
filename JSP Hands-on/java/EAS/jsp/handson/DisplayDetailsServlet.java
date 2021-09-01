@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/EmpDetailsServlet")
-public class EmpDetailsServlet extends HttpServlet {
+@WebServlet("/DisplayDetailsServlet")
+public class DisplayDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,9 +39,9 @@ public class EmpDetailsServlet extends HttpServlet {
 	   
 		//populate the object.
 		Employee e = new Employee(id, name,gender,dob,fte,department,sal);
+		RequestDispatcher rd = request.getRequestDispatcher("display-details.jsp");
+		rd.forward(request, response);
 		
-		PrintWriter pw = response.getWriter();
-		pw.write(e.toString());
 	}
 		
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

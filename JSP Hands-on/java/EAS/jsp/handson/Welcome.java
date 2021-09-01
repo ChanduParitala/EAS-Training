@@ -3,6 +3,7 @@ package EAS.jsp.handson;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,9 @@ public class Welcome extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		
 		String name = request.getParameter("name");
-		pw.print("Welcome "+name);
+		if (name!=null) {
+			pw.print("Welcome "+name);
+		}
 	}
 
 }
