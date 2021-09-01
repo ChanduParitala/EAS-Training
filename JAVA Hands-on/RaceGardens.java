@@ -11,7 +11,6 @@ Before going ahead. pls include the following in mysql workbench!, and add jar t
 database : jdbc
 username: root
 password: 2luvuu
-
 Table : roomBook
 create table roomBook(p_name varchar(30), p_email varchar(20), p_location varchar(100), p_room_no integer, p_bill float(10,2));
 alter table roombook add check_in date,add check_out date;
@@ -443,7 +442,9 @@ public class RaceGardens {
 			GuestRoom gObj = new ConferenceHall(roomNo, pay, pObj, 20, 1, LocalDate.now(), LocalDate.now().plusDays(1));
 			System.out.println("Mr."+name+" "+"Room booked, "+gObj.roomNo+" in "+gObj.hotelName+" on, "+gObj.checkIn+" for Conference with max. "+gObj.noOfPeople+" members.");
 			System.out.println("Your reservation ends on, "+gObj.checkOut);
-		}		
+		}	
+		if(choice.equals("H"))
+		{
 		System.out.println("Enter Number of people residing: ");
 		int noOfPeople;
 		do {
@@ -466,8 +467,12 @@ public class RaceGardens {
 				flag=true;
 			}
 		}while(flag);
+		}
+		if(choice.equals("H"))
+		{
 		System.out.println("Enter days to reside: ");
 		int days = in.nextInt();
+		}
 		
 		if(choice.equals("H"))
 		{
