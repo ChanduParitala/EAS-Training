@@ -32,7 +32,7 @@ out.write(request.getParameter("r"));
 
 <tr>
 <td><h4>Date Of Birth:</h4></td>
-<%-- unable to get thru <fmt:formateDate> coz, unable to get value. --%>
+<%-- unable to get thru <fmt:formateDate> coz, unable to get value of LocalDate. --%>
 <td><%
 out.write(request.getParameter("dob"));
 %>
@@ -56,9 +56,10 @@ out.write(request.getParameter("department"));
 <tr>
 <td><h4>Salary:</h4></td>
 <%-- unable to get thru <fmt:formateNumber> coz, unable to get value. --%>
-<td><%
-out.write(request.getParameter("sal"));
-%></td></tr>
+<td>
+<c:set var="sal" value="<%= request.getParameter(\"sal\") %>"/>
+<fmt:formatNumber type="number" value="${sal}"/>
+</td></tr>
 
 </table>
 
