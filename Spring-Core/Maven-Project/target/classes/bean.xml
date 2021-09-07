@@ -1,0 +1,49 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="s1" class="com.spring.Model.Student">
+		<property name="eId" value="101" />
+		<property name="eName" value="Ranjit" />
+		<property name="addressWire" ref="addressBean" />
+	</bean>
+	<bean id="addressBean" class="com.spring.Model.Address">
+		<property name="city" value="Pune" />
+		<property name="state" value="MP" />
+	</bean>
+
+	<bean id="s2" class="com.spring.Model.Student">
+		<property name="eId" value="102" />
+		<property name="eName" value="Saraswathy" />
+		<property name="addressWire">
+			<bean class="com.spring.Model.Address">
+				<property name="city" value="CHN" />
+				<property name="state" value="TN" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="constrS3" class="com.spring.Model.Student">
+		<constructor-arg value="103" type="int" />
+		<constructor-arg value="Siri" type="String" />
+		<constructor-arg ref="addressRef" />
+	</bean>
+	<bean id="addressRef" class="com.spring.Model.Address">
+		<property name="city" value="Hyd" />
+		<property name="state" value="Telangana" />
+	</bean>
+
+	<bean id="AutoWS4" class="com.spring.Model.Student"
+		autowire="byName">
+		<property name="eId" value="104" />
+		<property name="eName" value="Abdul" />
+	</bean>
+	<bean id="addressWire" class="com.spring.Model.Address">
+		<property name="city" value="Hyd" />
+		<property name="state" value="Telangana" />
+	</bean>
+
+</beans>
