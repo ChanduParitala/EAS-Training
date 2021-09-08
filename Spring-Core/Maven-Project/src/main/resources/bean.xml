@@ -42,8 +42,15 @@
 		<property name="eName" value="Abdul" />
 	</bean>
 	<bean id="addressWire" class="com.spring.Model.Address">
-		<property name="city" value="Hyd" />
-		<property name="state" value="Telangana" />
+		<property name="city" value="No Way Home" />
+		<property name="state" value="Queens" />
 	</bean>
 
+	<bean id="AutoWS5" class="com.spring.Model.Student"
+		autowire="constructor">
+		<constructor-arg value="106" type="int" />
+		<constructor-arg value="Ruchira" type="String" />
+	</bean>
+	<!-- No need to Create other Bean, the bean is picked byName -->
+	
 </beans>

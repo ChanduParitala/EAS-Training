@@ -25,6 +25,10 @@ public class Address {
 		this.state = state;
 	}
 
+	public void called()
+	{
+		System.out.println("Hey, you have called the OBJ of address.");
+	}
 	public Address() {
 
 	}

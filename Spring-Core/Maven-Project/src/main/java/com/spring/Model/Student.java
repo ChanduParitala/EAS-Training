@@ -28,6 +28,10 @@ public class Student {
 	public void setAddressWire(Address address) {
 		this.addressWire = address;
 	}
+	
+	public void callObj() {
+		addressWire.called();
+	}
 
 	public Student(int eId, String eName, Address addressWire) {
 		super();

@@ -7,7 +7,8 @@
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="AutoAddress" class="com.spring.Model.Student"
-		autowire="byType">
+		autowire="byType" scope="singleton">
+		<!-- change the scope to either of singleton/prototype to check the difference. -->
 		<property name="eId" value="105" />
 		<property name="eName" value="Chandan" />
 	</bean>
